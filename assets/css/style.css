@@ -52,12 +52,12 @@ button#start{
     background-color: #dc7739;
     border-radius: 10px;
     /*color: white;*/
-    margin: 53px 557pxpx;
+    margin: 53px 557px;
 }
 
 #startAgain{
 	padding: 4px;
-    font-size: 35px;
+    font-size: 25px;
     background-color: #dc7739;
     border-radius: 10px;
     /*color: white;*/

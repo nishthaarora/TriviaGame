@@ -212,10 +212,10 @@ $(document).ready(function() {
     function moveToNextQuestion() {
 
         if (i === questions.length - 1) {
-            setTimeout(gameEnd, 2000);
+            setTimeout(gameEnd, 6000);
         } else {
             i++;
-            setTimeout(start, 2000);
+            setTimeout(start, 6000);
 
         }
     }
