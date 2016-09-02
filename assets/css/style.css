@@ -1,0 +1,89 @@
+.hidden{
+	display: none;
+
+}
+
+body{
+	background-image: url(../images/background3.jpg);
+	background-repeat: repeat-y;
+	background-size: cover;
+}
+
+.answer:hover {
+	background-color: #dc7739;
+}
+
+.logo{
+	position: fixed;
+    bottom: 1px;
+    right: 2px;
+
+}
+
+.answer{
+	font-weight: normal;
+}
+
+
+.quizQuestions{
+	text-align: center;
+	line-height: 34px;
+	font-weight: bold;
+	
+}
+
+.question{
+	font-size: 33px;
+    margin-top: 24px;
+}
+
+.timeInterval{
+	text-align: center;
+	font-size: 23px;
+}
+
+.gameName{
+	text-align: center;
+}
+
+button#start{
+	padding: 27px;
+    font-size: 49px;
+    background-color: #dc7739;
+    border-radius: 10px;
+    /*color: white;*/
+    margin: 53px 315px;
+}
+
+#startAgain{
+	padding: 4px;
+    font-size: 35px;
+    background-color: #dc7739;
+    border-radius: 10px;
+    /*color: white;*/
+    margin: 53px 315px;
+}
+
+p.correctAnswer, div#revealAnswer {
+    text-align: center;
+    font-size: 33;
+    margin-top: 7px;
+    font-weight: bolder;
+    font-size: 30px;
+    line-height: 76px;
+}
+
+
+div#finalOutput {
+    text-align: center;
+    font-size: 33;
+    /* margin-top: 31px; */
+    font-weight: bolder;
+    font-size: 30px;
+    line-height: 8px;
+}
+
+/*
+.reveal{
+	display:none;
+}*/
