@@ -1,15 +1,17 @@
 $(document).ready(function() {
 
-    var values = "";
-    var testAnswer;
-    var correctAnswerCount = 0;
-    var incorrectAnswerCount = 0;
-    var unansweredCount = 0;
-    var interval = 15;
-    var counters = [];
+    var correctAnswerCount;
+    var incorrectAnswerCount;
+    var unansweredCount;
+    var defaultInterval = 15;
+    var currentInterval = defaultInterval;
     var counter;
 
-    var gameArray = [{
+    var winImages = ['win1.gif', 'win2.gif', 'win3.gif', 'win4.gif'];
+    var loseImages = ['lose1.gif', 'lose2.gif', 'lose3.gif'];
+    var timesUp = ['tu1.gif', 'tu2.gif', 'tu3.gif'];
+
+    var questions = [{
         id: 'questionOne',
         question: "The Tag is used To Give Heading To The Table",
         choice1: 'Head',
@@ -82,52 +84,66 @@ $(document).ready(function() {
         choice4: 'rnd(7.25)'
     }];
 
-    var answerArray = ['Caption', 'Onclick()', 'Int.Parse', 'Local Variable', 'toLocaleString()', 'lastIndexOf()', 'link()', 'map()', 'if (i != 5)', 'Math.round(7.25)'];
+    var answers = [
+        'Caption',
+        'Onclick()',
+        'Int.Parse',
+        'Local Variable',
+        'toLocaleString()',
+        'lastIndexOf()',
+        'link()',
+        'map()',
+        'if (i != 5)',
+        'Math.round(7.25)'
+    ];
 
-
-
+    // Initialise function to initialise everything  
     function initialise() {
-        $('#startAgain').prop('disabled', 'true');
+        // $('#startAgain').prop('disabled', 'true');
         i = 0;
         start();
-        createQuestions()
+        createQuestion()
         correctAnswerCount = 0;
         incorrectAnswerCount = 0;
         unansweredCount = 0;
-        decrement();
 
-
-
+        $('#startAgain').addClass('hidden');
     }
 
+    /**
+        This function is decrementing the time interval of given seconds for each question.
+        It also takes care of moving to next screen when given time is over.
+    */
     function decrement() {
 
-        $('.timeInterval').html("Time Remaining: " + interval)
+        currentInterval--;
 
-        interval--;
+        $('.timeInterval').html("Time Remaining: " + currentInterval);
 
-        if (interval === -1) {
+        if (currentInterval === 0) {
             clearInterval(counter);
             unansweredCount++;
 
             $('#compareUserAnswer').append('<div class= "reveal" id= "revealAnswer" >' +
                 "Time is Up!" + '<br>' + '<p class="correctAnswer" >' +
                 "Time Remaining: " + 0 + "<br>" + "The Correct Answer Was: " +
-                '<br>' + answerArray[i] + '</p></div>');
+                '<br>' + answers[i] + '</p></div>');
+
+            addRandomImage(timesUp);
 
             $('#start').hide();
             hide();
-            nextQuestion();
+            moveToNextQuestion();
         }
     };
 
+    /**
+    This function is creating a question and giving choices to the user.  
+    */
 
+    function createQuestion() {
 
-    i = 0;
-
-    function createQuestions() {
-
-        var currentQuestion = gameArray[i];
+        var currentQuestion = questions[i];
 
         $('#container').html('<div class= "quizQuestions" id=' + currentQuestion.id + '>' +
             '<p class="question">' + currentQuestion.question + '</p>' +
@@ -136,93 +152,100 @@ $(document).ready(function() {
             '<p class="answer">' + currentQuestion.choice3 + '</p>' +
             '<p class="answer">' + currentQuestion.choice4 + '</p></div>');
 
+        // below line is hiding the the result page at the time of showing questions. 
         $('#finalOutput').hide();
-
     };
 
+    /**
+    This function is comparing the answer which the user selects with the answer array and shows the user if 
+    the answer is correct or not. if the user selects a wrong answer then through this function he will see the
+    right answer.
+    */
 
-    function compareAnswers() {
-
-        values = $(this).text();
-
-        testAnswer = answerArray.indexOf(values);
+    function compareAnswer() {
+        var userAns = $(this).text();
+        var isAnswerCorrect = answers[i] === userAns;
+        // clear interval clears the interval set in function start()
         clearInterval(counter);
-        console.log(counter);
         hide();
 
-
-        if (testAnswer === -1) {
-
+        if (!isAnswerCorrect) {
             incorrectAnswerCount++;
 
             $('#compareUserAnswer').html('<div class= "reveal" id= "revealAnswer" >' +
                 "Nope!" + '<br>' + '<p class="correctAnswer" >' + "Time Remaining: " +
-                interval + '<br>' + "The Correct Answer Was: " + answerArray[i] +
+                currentInterval + '<br>' + "The Correct Answer Was: " + answers[i] +
                 '</p></div>');
-
-
+            addRandomImage(loseImages);
         } else {
-
             correctAnswerCount++;
 
             $('#compareUserAnswer').html('<div class= "reveal" id= "revealAnswer" >' +
-                '<p class="correctAnswer" >' + "Time Remaining: " + interval + '<br>' +
+                '<p class="correctAnswer" >' + "Time Remaining: " + currentInterval + '<br>' +
                 "Your answer is Correct!" + '</p></div>');
 
-
-            // var winImages = ['win1.gif', 'win2.gif', 'win3.gif', 'win4.gif']
-
-            // var randomWinImages = Math.floor(Math.random() * winImages.length);
-            // var imgStr = '<img class ="gify" src="assets/images" + randomWinImages />'
-            // var imgStr = '<img class ="gify" src="assets/images/win1.gif" />'
-
-            $('#revealAnswer').append('<img class ="gify" src="assets/images/win1.gif" />');
-            $('.gify').css({
-                'width': '300px',
-                'margin-left': '251px'
-            })
-
-
+            addRandomImage(winImages);
         }
-        nextQuestion();
+        moveToNextQuestion();
     };
 
+    /**
+    Function to choose random gif images when the user chooses correct answer, wrong answer or when 
+    the time is up.
+    */
 
-    function nextQuestion() {
+    function addRandomImage(images) {
+        var randomNumber = Math.floor(Math.random() * images.length);
+        var randomImage = "assets/images/" + images[randomNumber];
 
-        if (i === gameArray.length - 1) {
-            gameEnd();
+        $('#revealAnswer').append('<img class ="gify" src="' + randomImage + '" />');
+        $('.gify').css({
+            'width': '300px',
+            'margin-left': '80px'
+        });
+    };
 
+    /**
+    This function moves to next question once the user has answered a question or if time is 
+    up or if all the questions has been answered.
+    */
+    function moveToNextQuestion() {
 
+        if (i === questions.length - 1) {
+            setTimeout(gameEnd, 2000);
         } else {
             i++;
-
-            setTimeout(start, 1000);
+            setTimeout(start, 2000);
 
         }
     }
 
-
+    /**
+    Hiding the container and time interval and displaying it on click event
+    */
     function hide() {
         $('#container').addClass('hidden');
         $('.timeInterval').hide();
-
-
     }
 
 
     function start() {
-        $('.timeInterval').html("Time Remaining: " + 15)
+        // reset interval to default
+        currentInterval = defaultInterval;
+        $('.timeInterval').html("Time Remaining: " + currentInterval);
         $('#container').removeClass('hidden');
         $("#compareUserAnswer").html('');
         $('.timeInterval').css('display', '');
         $('#start').remove();
-        createQuestions();
-        interval = 14;
+        createQuestion();
         counter = setInterval(decrement, 1000);
-
-
     };
+
+
+    /**
+    This function is called when all questions had been answered. This shows the stats of correct ans,
+    incorrect ans and questions not answered.
+    */
 
     function gameEnd() {
         $('#finalScore').html('<div class= "endGame" id= "finalOutput" >' +
@@ -232,14 +255,12 @@ $(document).ready(function() {
             '<p class="unansweredCount" >' + "Number of questions not answered: " + unansweredCount + '</p></div>');
         $('.reveal').hide();
         hide();
-        $('#startAgain').removeClass('hidden').on('click', function() {
-            initialise();
-        });
-
+        $('#startAgain').removeClass('hidden').on('click', initialise);
     }
 
 
-    $('#start').on('click', start);
-    $(document).on('click', '.answer', compareAnswers);
+    //calling the functions declared above 
+    $("#start").on('click', initialise);
+    $(document).on('click', '.answer', compareAnswer);
 
 });

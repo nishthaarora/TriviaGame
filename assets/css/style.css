@@ -52,7 +52,7 @@ button#start{
     background-color: #dc7739;
     border-radius: 10px;
     /*color: white;*/
-    margin: 53px 315px;
+    margin: 53px 557pxpx;
 }
 
 #startAgain{
@@ -61,7 +61,7 @@ button#start{
     background-color: #dc7739;
     border-radius: 10px;
     /*color: white;*/
-    margin: 53px 315px;
+    margin: 53px 557px;
 }
 
 p.correctAnswer, div#revealAnswer {
